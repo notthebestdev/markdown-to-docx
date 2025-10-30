@@ -143,3 +143,6 @@ vite.config.ts.timestamp-*
 # OS
 .DS_Store
 Thumbs.db
+
+# Markdown To Docx generated files
+exports/
