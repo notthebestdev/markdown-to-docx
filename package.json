@@ -1,0 +1,32 @@
+{
+  "name": "markdown-to-docx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "html-docx-js-typescript": "^0.1.5",
+    "jiti": "^2.6.1",
+    "marked": "^16.4.1",
+    "ora": "^9.0.0",
+    "prettier": "^3.6.2",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@types/prompts": "^2.4.9",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "typescript-eslint": "^8.46.2"
+  }
+}
