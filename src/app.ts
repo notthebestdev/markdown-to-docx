@@ -7,24 +7,43 @@ import chalk from "chalk";
 import path from "path";
 
 (async () => {
-  const response = await prompts([
-    {
-      type: "text",
-      name: "inputFile",
-      message: "Enter the path to your markdown file:",
-      validate: (value) => {
-        if (!value) return "You must provide a file path";
-        if (!fs.existsSync(value)) return "File does not exist";
-        if (!value.toLowerCase().endsWith(".md")) return "File must be a .md file";
-        return true;
-      },
-    },
-  ]);
+  // Check for CLI argument
+  const cliInputFile = process.argv[2];
 
-  // Check if user cancelled the prompts
-  if (!response.inputFile) {
-    console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
-    process.exit(0);
+  let inputFile: string | undefined;
+
+  if (cliInputFile) {
+    // Validate CLI argument
+    if (!fs.existsSync(cliInputFile)) {
+      console.log(chalk.red("✖") + chalk.white(" File does not exist."));
+      process.exit(1);
+    }
+    if (!cliInputFile.toLowerCase().endsWith(".md")) {
+      console.log(chalk.red("✖") + chalk.white(" File must be a .md file."));
+      process.exit(1);
+    }
+    inputFile = cliInputFile;
+  } else {
+    // Prompt for input file
+    const response = await prompts([
+      {
+        type: "text",
+        name: "inputFile",
+        message: "Enter the path to your markdown file:",
+        validate: (value) => {
+          if (!value) return "You must provide a file path";
+          if (!fs.existsSync(value)) return "File does not exist";
+          if (!value.toLowerCase().endsWith(".md")) return "File must be a .md file";
+          return true;
+        },
+      },
+    ]);
+    // Check if user cancelled the prompts
+    if (!response.inputFile) {
+      console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+      process.exit(0);
+    }
+    inputFile = response.inputFile;
   }
 
   // Ensure exports directory exists and force output into it
@@ -32,7 +51,7 @@ import path from "path";
   await fs.promises.mkdir(exportsDir, { recursive: true });
 
   // Generate output filename
-  const inputName = path.basename(response.inputFile, path.extname(response.inputFile));
+  const inputName = path.basename(inputFile! , path.extname(inputFile!));
   const outputBase = `${inputName}-${Date.now()}.docx`;
   const outputPath = path.join(exportsDir, outputBase);
 
@@ -41,7 +60,10 @@ import path from "path";
   const spinner = ora("Converting document to .docx").start();
   let html: string | undefined;
   try {
-    const md = await fs.promises.readFile(response.inputFile, "utf-8");
+    if (!inputFile) {
+      throw new Error("Input file path is undefined.");
+    }
+    const md = await fs.promises.readFile(inputFile, "utf-8");
     html = await marked(md);
   } catch (error) {
     spinner.fail("Failed to convert document");
@@ -62,7 +84,7 @@ import path from "path";
       spinner.succeed(
         "Document converted successfully in" +
           chalk.cyan(` ${Date.now() - start}ms`) +
-          chalk.white(" — saved to ") +
+          chalk.white(" — saved to") +
           chalk.cyan(` ${outputPath}`)
       );
     }
