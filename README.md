@@ -1,4 +1,6 @@
-# Markdown to Docx
+<p align="center">
+    <img src="https://socialify.git.ci/notthebestdev/markdown-to-docx/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light" alt="markdown-to-docx" />
+</p>
 
 This program allows you to transform Markdown into a Word document.
 
