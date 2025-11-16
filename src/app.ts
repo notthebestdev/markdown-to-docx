@@ -5,12 +5,14 @@ import { marked } from "marked";
 import { asBlob } from "html-docx-js-typescript";
 import chalk from "chalk";
 import path from "path";
+import clipboardy from "clipboardy";
 
 (async () => {
   // Check for CLI argument
   const cliInputFile = process.argv[2];
 
   let inputFile: string | undefined;
+  let mdContent: string | undefined;
 
   if (cliInputFile) {
     // Validate CLI argument
@@ -23,35 +25,68 @@ import path from "path";
       process.exit(1);
     }
     inputFile = cliInputFile;
+    mdContent = await fs.promises.readFile(inputFile, "utf-8");
   } else {
-    // Prompt for input file
-    const response = await prompts([
-      {
-        type: "text",
-        name: "inputFile",
-        message: "Enter the path to your markdown file:",
-        validate: (value) => {
-          if (!value) return "You must provide a file path";
-          if (!fs.existsSync(value)) return "File does not exist";
-          if (!value.toLowerCase().endsWith(".md")) return "File must be a .md file";
-          return true;
-        },
-      },
-    ]);
-    // Check if user cancelled the prompts
-    if (!response.inputFile) {
+    // First ask whether to use clipboard or file
+    const sourceResponse = await prompts({
+      type: "select",
+      name: "source",
+      message: "Where is the markdown?",
+      choices: [
+        { title: "Clipboard", value: "clipboard" },
+        { title: "File", value: "file" },
+      ],
+    });
+
+    if (!sourceResponse.source) {
       console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
       process.exit(0);
     }
-    inputFile = response.inputFile;
+
+    if (sourceResponse.source === "clipboard") {
+      try {
+        mdContent = await clipboardy.read();
+        if (!mdContent) {
+          console.log(chalk.red("✖") + chalk.white(" Clipboard is empty."));
+          process.exit(1);
+        }
+      } catch (err) {
+        console.log(chalk.red("✖") + chalk.white(" Failed to read from clipboard."));
+        console.error(err);
+        process.exit(1);
+      }
+    } else {
+      // Prompt for input file
+      const response = await prompts([
+        {
+          type: "text",
+          name: "inputFile",
+          message: "Enter the path to your markdown file:",
+          validate: (value) => {
+            if (!value) return "You must provide a file path";
+            if (!fs.existsSync(value)) return "File does not exist";
+            if (!value.toLowerCase().endsWith(".md")) return "File must be a .md file";
+            return true;
+          },
+        },
+      ]);
+      // Check if user cancelled the prompts
+      if (!response.inputFile) {
+        console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+        process.exit(0);
+      }
+      inputFile = response.inputFile;
+      mdContent = await fs.promises.readFile(inputFile as string, "utf-8");
+    }
   }
 
-  // Ensure exports directory exists and force output into it
   const exportsDir = path.join(process.cwd(), "exports");
   await fs.promises.mkdir(exportsDir, { recursive: true });
 
   // Generate output filename
-  const inputName = path.basename(inputFile! , path.extname(inputFile!));
+  const inputName = inputFile
+    ? path.basename(inputFile, path.extname(inputFile))
+    : "clipboard";
   const outputBase = `${inputName}-${Date.now()}.docx`;
   const outputPath = path.join(exportsDir, outputBase);
 
@@ -60,11 +95,10 @@ import path from "path";
   const spinner = ora("Converting document to .docx").start();
   let html: string | undefined;
   try {
-    if (!inputFile) {
-      throw new Error("Input file path is undefined.");
+    if (!mdContent) {
+      throw new Error("Markdown content is undefined.");
     }
-    const md = await fs.promises.readFile(inputFile, "utf-8");
-    html = await marked(md);
+    html = await marked(mdContent);
   } catch (error) {
     spinner.fail("Failed to convert document");
     console.error(error);
