@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +19,7 @@
     "chalk": "^5.6.2",
     "clipboardy": "^5.0.0",
     "html-docx-js-typescript": "^0.1.5",
+    "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "marked": "^17.0.0",
     "ora": "^9.0.0",
