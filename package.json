@@ -31,6 +31,6 @@
     "@types/prompts": "^2.4.9",
     "eslint": "^9.39.2",
     "globals": "^16.4.0",
-    "typescript-eslint": "^8.50.0"
+    "typescript-eslint": "^8.50.1"
   }
 }
