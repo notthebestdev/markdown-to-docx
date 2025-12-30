@@ -6,22 +6,43 @@ This program allows you to transform Markdown into a Word document.
 
 ## Description
 
-This project converts Markdown files into Microsoft Word (.docx) documents. It preserves common block- and inline-level elements (headings, lists, links, images, code blocks, emphasis, tables) and provides a small CLI to control input, output and templates.
+This project converts Markdown files into Microsoft Word (.docx) documents.
+
+It preserves common block and inline-level elements (headings, lists, links, images, code blocks, emphasis, tables) and provides a small CLI to control input, output and templates.
+
+## Features
+
+- **Fast**: Processes large Markdown files quickly and efficiently.
+- **Accurate**: Preserves formatting for headings, lists, links, images, code blocks, emphasis, and tables.
+- **CLI Tool**: Simple command-line interface for easy integration into workflows.
+- **Cross-platform**: Works on Windows, macOS, and Linux.
 
 ## Getting Started
 
-To start, run the program in your terminal:
+To begin, build the CLI by running:
+
+```sh
+npm run build
+```
+
+Next, link the CLI globally:
+
+```sh
+npm link
+```
+
+Once linked, you can execute the CLI from your terminal:
+
+```sh
+md-to-docx
+```
+
+---
+
+You can also run this locally without linking the CLI globally.
 
 ```sh
 npm run dev
-```
-
-You will be prompted for the file and options.
-
-Alternatively, you can skip the prompts by specifying the input file path directly:
-
-```sh
-npm run dev [input-file-path]
 ```
 
 ## Usage (CLI)

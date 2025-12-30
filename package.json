@@ -2,7 +2,9 @@
   "name": "markdown-to-docx",
   "version": "1.0.0",
   "description": "Transform Markdown into a Word document.",
-  "main": "index.js",
+  "bin": {
+    "md-to-docx": "./dist/app.js"
+  },
   "scripts": {
     "dev": "node src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
