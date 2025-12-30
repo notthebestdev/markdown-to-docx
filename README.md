@@ -19,7 +19,13 @@ It preserves common block and inline-level elements (headings, lists, links, ima
 
 ## Getting Started
 
-To begin, build the CLI by running:
+To begin, install all dependencies in the project:
+
+```sh
+npm install
+```
+
+Then, build the CLI by running:
 
 ```sh
 npm run build
