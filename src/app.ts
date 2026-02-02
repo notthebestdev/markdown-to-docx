@@ -104,6 +104,7 @@ import clipboardy from "clipboardy";
   } catch (error) {
     spinner.fail("Failed to convert document");
     console.error(error);
+    process.exit(1);
   } finally {
     if (html) {
       const docx = await asBlob(html);
