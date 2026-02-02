@@ -56,6 +56,7 @@ npm run dev
 When you run the program you will be prompted to provide:
 
 - Input file: path to the Markdown file to convert (required).
+- Or, you can provide the clipboard option to read Markdown from clipboard.
 
 ## License
 
