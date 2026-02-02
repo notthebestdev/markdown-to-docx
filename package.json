@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "node src/app.ts",
-    "test": "tsx test/cli.test.ts",
+    "test": "npm run build && tsx test/cli.test.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "build": "tsc",
