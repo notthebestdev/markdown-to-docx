@@ -1,4 +1,4 @@
-name: Lint
+name: 🧪 Lint and Test
 
 on:
   push:
@@ -25,3 +25,6 @@ jobs:
 
       - name: Run linter
         run: npm run lint
+
+      - name: Run tests
+        run: npm test
