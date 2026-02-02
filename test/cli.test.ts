@@ -1,27 +1,3 @@
-/**
- * Comprehensive Test Suite for Markdown to DOCX Converter
- * 
- * Test Categories:
- * 
- * 1. File Validation Tests (4 tests)
- *    - Tests for file existence, extension validation, and case sensitivity
- * 
- * 2. Basic Conversion Tests (4 tests)
- *    - Core functionality: simple/complex files, directory creation, unique filenames
- * 
- * 3. Edge Cases Tests (5 tests)
- *    - Empty files, whitespace-only, unicode, special chars, long filenames
- * 
- * 4. Markdown Content Tests (8 tests)
- *    - Tests conversion of various markdown elements: headers, lists, code,
- *      links, emphasis, blockquotes, tables, horizontal rules
- * 
- * 5. Output File Tests (4 tests)
- *    - Validates output format, naming conventions, and file structure
- * 
- * Total: 25 tests across 5 categories
- */
-
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert";
 import { execSync } from "child_process";
