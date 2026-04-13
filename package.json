@@ -10,7 +10,7 @@
     "test": "npm run build && tsx test/cli.test.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "build": "tsc",
+    "build": "node scripts/build.ts",
     "postbuild": "chmod +x dist/app.js",
     "prepare": "husky"
   },
@@ -34,6 +34,7 @@
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.6.0",
     "@types/prompts": "^2.4.9",
+    "esbuild": "^0.28.0",
     "eslint": "^10.2.0",
     "globals": "^17.5.0",
     "tsx": "^4.21.0",
