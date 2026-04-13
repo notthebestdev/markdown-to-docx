@@ -10,8 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'dependencies')
 
+    permissions:
+      contents: write
+
     steps:
       - name: Update PR
         uses: mscharley/dependency-changesets-action@v1.2.4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           use-conventional-commits: true
