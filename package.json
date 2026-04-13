@@ -1,7 +1,41 @@
 {
-  "name": "markdown-to-docx",
+  "name": "@thebestdev/md-to-docx",
   "version": "1.0.0",
   "description": "Transform Markdown into a Word document.",
+  "keywords": [
+    "markdown",
+    "docx",
+    "word",
+    "converter",
+    "cli"
+  ],
+  "author": "TheBestDeveloper",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notthebestdev/markdown-to-docx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/notthebestdev/markdown-to-docx/issues"
+  },
+  "homepage": "https://github.com/notthebestdev/markdown-to-docx#readme",
+  "type": "module",
+  "main": "./dist/app.js",
+  "exports": {
+    ".": "./dist/app.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "md-to-docx": "./dist/app.js"
   },
@@ -12,22 +46,16 @@
     "format": "prettier --write .",
     "build": "node scripts/build.ts",
     "postbuild": "chmod +x dist/app.js",
+    "prepack": "npm run build",
     "prepare": "husky"
   },
-  "keywords": [],
-  "author": "TheBestDeveloper",
-  "license": "MIT",
-  "type": "module",
   "dependencies": {
     "chalk": "^5.6.2",
     "clipboardy": "^5.3.1",
     "glob": "^13.0.6",
     "html-docx-js-typescript": "^0.1.5",
-    "husky": "^9.1.7",
-    "jiti": "^2.6.1",
     "marked": "^18.0.0",
     "ora": "^9.3.0",
-    "prettier": "^3.8.2",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
@@ -37,6 +65,9 @@
     "esbuild": "^0.28.0",
     "eslint": "^10.2.0",
     "globals": "^17.5.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.6.1",
+    "prettier": "^3.8.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.2"

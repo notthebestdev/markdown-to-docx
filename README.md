@@ -17,38 +17,33 @@ It preserves common block and inline-level elements (headings, lists, links, ima
 - **CLI Tool**: Simple command-line interface for easy integration into workflows.
 - **Cross-platform**: Works on Windows, macOS, and Linux.
 
-## Getting Started
+## Installation
 
-To begin, install all dependencies in the project:
-
-```sh
-npm install
-```
-
-Then, build the CLI by running:
+Install globally from npm:
 
 ```sh
-npm run build
+npm install -g @thebestdev/md-to-docx
 ```
 
-Next, link the CLI globally:
-
-```sh
-npm link
-```
-
-Once linked, you can execute the CLI from your terminal:
+Then run:
 
 ```sh
 md-to-docx
 ```
 
----
-
-You can also run this locally without linking the CLI globally.
+Or run without a global install:
 
 ```sh
-npm run dev
+npx @thebestdev/md-to-docx
+```
+
+## Local Development
+
+```sh
+npm install
+npm run build
+npm link
+md-to-docx
 ```
 
 ## Usage (CLI)
