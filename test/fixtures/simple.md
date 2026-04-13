@@ -20,7 +20,7 @@ function hello() {
 
 ## Formatting
 
-This text has **bold** and *italic* formatting.
+This text has **bold** and _italic_ formatting.
 
 ## Conclusion
 

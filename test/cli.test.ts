@@ -39,14 +39,14 @@ describe("File Validation Tests", () => {
       (err: unknown) => {
         return (err as { status?: number }).status === 1;
       },
-      "Should exit with status 1 for non-existent file"
+      "Should exit with status 1 for non-existent file",
     );
   });
 
   it("should fail gracefully with non-markdown file", () => {
     const tempFile = path.join(process.cwd(), "test.txt");
     fs.writeFileSync(tempFile, "test content");
-    
+
     try {
       assert.throws(
         () => {
@@ -58,7 +58,7 @@ describe("File Validation Tests", () => {
         (err: unknown) => {
           return (err as { status?: number }).status === 1;
         },
-        "Should exit with status 1 for non-markdown file"
+        "Should exit with status 1 for non-markdown file",
       );
     } finally {
       if (fs.existsSync(tempFile)) {
@@ -70,7 +70,7 @@ describe("File Validation Tests", () => {
   it("should accept .md extension (lowercase)", () => {
     const tempFile = path.join(fixturesDir, "temp-lowercase.md");
     fs.writeFileSync(tempFile, "# Test");
-    
+
     try {
       execCLI(tempFile);
       const files = fs.readdirSync(exportsDir);
@@ -85,7 +85,7 @@ describe("File Validation Tests", () => {
   it("should accept .MD extension (uppercase)", () => {
     const tempFile = path.join(fixturesDir, "temp-uppercase.MD");
     fs.writeFileSync(tempFile, "# Test");
-    
+
     try {
       execCLI(tempFile);
       const files = fs.readdirSync(exportsDir);
@@ -113,7 +113,7 @@ describe("Basic Conversion Tests", () => {
     const files = fs.readdirSync(exportsDir);
     assert.strictEqual(files.length, 1);
     assert.match(files[0], /simple-\d+\.docx/);
-    
+
     const filePath = path.join(exportsDir, files[0]);
     const stats = fs.statSync(filePath);
     assert.ok(stats.size > 0, "Generated file should not be empty");
@@ -125,7 +125,7 @@ describe("Basic Conversion Tests", () => {
     const files = fs.readdirSync(exportsDir);
     assert.strictEqual(files.length, 1);
     assert.match(files[0], /complex-\d+\.docx/);
-    
+
     const filePath = path.join(exportsDir, files[0]);
     const stats = fs.statSync(filePath);
     assert.ok(stats.size > 0);
@@ -145,12 +145,12 @@ describe("Basic Conversion Tests", () => {
 
   it("should generate unique filenames for multiple conversions", () => {
     execCLI(simpleFixture);
-    
+
     const startTime = Date.now();
     while (Date.now() - startTime < 5) {
       // Wait for different timestamp
     }
-    
+
     execCLI(simpleFixture);
 
     const files = fs.readdirSync(exportsDir);
@@ -166,14 +166,14 @@ describe("Edge Cases Tests", () => {
   it("should fail gracefully with empty markdown file", () => {
     const emptyFile = path.join(fixturesDir, "empty.md");
     fs.writeFileSync(emptyFile, "");
-    
+
     try {
       assert.throws(
         () => execCLI(emptyFile),
         (err: unknown) => {
           return (err as { status?: number }).status === 1;
         },
-        "Should exit with status 1 for empty file"
+        "Should exit with status 1 for empty file",
       );
     } finally {
       if (fs.existsSync(emptyFile)) {
@@ -185,14 +185,17 @@ describe("Edge Cases Tests", () => {
   it("should handle markdown with only whitespace", () => {
     const whitespaceFile = path.join(fixturesDir, "whitespace.md");
     fs.writeFileSync(whitespaceFile, "   \n\n   \t  \n  ");
-    
+
     try {
       execCLI(whitespaceFile);
-      
+
       // Whitespace-only markdown produces empty HTML, so no file is created
       // This is actually expected behavior - the app silently succeeds but doesn't write a file
       // We can check that no error occurred by reaching this point
-      assert.ok(true, "Should complete without error even for whitespace-only content");
+      assert.ok(
+        true,
+        "Should complete without error even for whitespace-only content",
+      );
     } finally {
       if (fs.existsSync(whitespaceFile)) {
         fs.unlinkSync(whitespaceFile);
@@ -202,13 +205,16 @@ describe("Edge Cases Tests", () => {
 
   it("should handle markdown with unicode characters", () => {
     const unicodeFile = path.join(fixturesDir, "unicode.md");
-    fs.writeFileSync(unicodeFile, "# 你好世界 🌍\n\n**Émojis:** 😀 ✨ 🚀\n\nΑλφάβητο ελληνικό");
-    
+    fs.writeFileSync(
+      unicodeFile,
+      "# 你好世界 🌍\n\n**Émojis:** 😀 ✨ 🚀\n\nΑλφάβητο ελληνικό",
+    );
+
     try {
       execCLI(unicodeFile);
       const files = fs.readdirSync(exportsDir);
       assert.strictEqual(files.length, 1);
-      
+
       const filePath = path.join(exportsDir, files[0]);
       const stats = fs.statSync(filePath);
       assert.ok(stats.size > 0);
@@ -221,8 +227,11 @@ describe("Edge Cases Tests", () => {
 
   it("should handle markdown with special characters in content", () => {
     const specialCharsFile = path.join(fixturesDir, "special-chars.md");
-    fs.writeFileSync(specialCharsFile, '# Test & < > " \' \n\n`code` with symbols: @#$%^&*()');
-    
+    fs.writeFileSync(
+      specialCharsFile,
+      "# Test & < > \" ' \n\n`code` with symbols: @#$%^&*()",
+    );
+
     try {
       execCLI(specialCharsFile);
       const files = fs.readdirSync(exportsDir);
@@ -238,7 +247,7 @@ describe("Edge Cases Tests", () => {
     const longName = "a".repeat(100);
     const longNameFile = path.join(fixturesDir, `${longName}.md`);
     fs.writeFileSync(longNameFile, "# Long filename test");
-    
+
     try {
       execCLI(longNameFile);
       const files = fs.readdirSync(exportsDir);
@@ -258,8 +267,11 @@ describe("Markdown Content Tests", () => {
 
   it("should convert markdown with headers", () => {
     const headersFile = path.join(fixturesDir, "headers.md");
-    fs.writeFileSync(headersFile, "# H1\n## H2\n### H3\n#### H4\n##### H5\n###### H6");
-    
+    fs.writeFileSync(
+      headersFile,
+      "# H1\n## H2\n### H3\n#### H4\n##### H5\n###### H6",
+    );
+
     try {
       execCLI(headersFile);
       const files = fs.readdirSync(exportsDir);
@@ -273,8 +285,11 @@ describe("Markdown Content Tests", () => {
 
   it("should convert markdown with lists", () => {
     const listsFile = path.join(fixturesDir, "lists.md");
-    fs.writeFileSync(listsFile, "# Lists\n\n- Item 1\n- Item 2\n  - Nested\n\n1. First\n2. Second");
-    
+    fs.writeFileSync(
+      listsFile,
+      "# Lists\n\n- Item 1\n- Item 2\n  - Nested\n\n1. First\n2. Second",
+    );
+
     try {
       execCLI(listsFile);
       const files = fs.readdirSync(exportsDir);
@@ -288,8 +303,11 @@ describe("Markdown Content Tests", () => {
 
   it("should convert markdown with code blocks", () => {
     const codeFile = path.join(fixturesDir, "code.md");
-    fs.writeFileSync(codeFile, "# Code\n\n```javascript\nconst x = 42;\n```\n\nInline `code` too.");
-    
+    fs.writeFileSync(
+      codeFile,
+      "# Code\n\n```javascript\nconst x = 42;\n```\n\nInline `code` too.",
+    );
+
     try {
       execCLI(codeFile);
       const files = fs.readdirSync(exportsDir);
@@ -303,8 +321,11 @@ describe("Markdown Content Tests", () => {
 
   it("should convert markdown with links", () => {
     const linksFile = path.join(fixturesDir, "links.md");
-    fs.writeFileSync(linksFile, "# Links\n\n[Google](https://google.com)\n\n[Ref link][1]\n\n[1]: https://example.com");
-    
+    fs.writeFileSync(
+      linksFile,
+      "# Links\n\n[Google](https://google.com)\n\n[Ref link][1]\n\n[1]: https://example.com",
+    );
+
     try {
       execCLI(linksFile);
       const files = fs.readdirSync(exportsDir);
@@ -318,8 +339,11 @@ describe("Markdown Content Tests", () => {
 
   it("should convert markdown with emphasis", () => {
     const emphasisFile = path.join(fixturesDir, "emphasis.md");
-    fs.writeFileSync(emphasisFile, "**bold** *italic* ~~strikethrough~~ ***bold italic***");
-    
+    fs.writeFileSync(
+      emphasisFile,
+      "**bold** *italic* ~~strikethrough~~ ***bold italic***",
+    );
+
     try {
       execCLI(emphasisFile);
       const files = fs.readdirSync(exportsDir);
@@ -333,8 +357,11 @@ describe("Markdown Content Tests", () => {
 
   it("should convert markdown with blockquotes", () => {
     const blockquoteFile = path.join(fixturesDir, "blockquote.md");
-    fs.writeFileSync(blockquoteFile, "> This is a quote\n> \n> Multi-line quote");
-    
+    fs.writeFileSync(
+      blockquoteFile,
+      "> This is a quote\n> \n> Multi-line quote",
+    );
+
     try {
       execCLI(blockquoteFile);
       const files = fs.readdirSync(exportsDir);
@@ -348,8 +375,11 @@ describe("Markdown Content Tests", () => {
 
   it("should convert markdown with tables", () => {
     const tableFile = path.join(fixturesDir, "table.md");
-    fs.writeFileSync(tableFile, "| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |");
-    
+    fs.writeFileSync(
+      tableFile,
+      "| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |",
+    );
+
     try {
       execCLI(tableFile);
       const files = fs.readdirSync(exportsDir);
@@ -364,7 +394,7 @@ describe("Markdown Content Tests", () => {
   it("should convert markdown with horizontal rules", () => {
     const hrFile = path.join(fixturesDir, "hr.md");
     fs.writeFileSync(hrFile, "Content\n\n---\n\nMore content\n\n***");
-    
+
     try {
       execCLI(hrFile);
       const files = fs.readdirSync(exportsDir);
@@ -385,33 +415,42 @@ describe("Output File Tests", () => {
 
   it("should generate .docx files with correct extension", () => {
     execCLI(simpleFixture);
-    
+
     const files = fs.readdirSync(exportsDir);
-    assert.ok(files.every(f => f.endsWith(".docx")), "All files should have .docx extension");
+    assert.ok(
+      files.every((f) => f.endsWith(".docx")),
+      "All files should have .docx extension",
+    );
   });
 
   it("should generate files with timestamp in name", () => {
     const beforeTime = Date.now();
     execCLI(simpleFixture);
     const afterTime = Date.now();
-    
+
     const files = fs.readdirSync(exportsDir);
     const filename = files[0];
     const timestampMatch = filename.match(/-(\d+)\.docx$/);
-    
+
     assert.ok(timestampMatch, "Filename should contain timestamp");
     const timestamp = parseInt(timestampMatch[1]);
-    assert.ok(timestamp >= beforeTime && timestamp <= afterTime, "Timestamp should be current");
+    assert.ok(
+      timestamp >= beforeTime && timestamp <= afterTime,
+      "Timestamp should be current",
+    );
   });
 
   it("should preserve base filename in output", () => {
     const customFile = path.join(fixturesDir, "my-custom-document.md");
     fs.writeFileSync(customFile, "# Custom");
-    
+
     try {
       execCLI(customFile);
       const files = fs.readdirSync(exportsDir);
-      assert.ok(files[0].startsWith("my-custom-document-"), "Should preserve base filename");
+      assert.ok(
+        files[0].startsWith("my-custom-document-"),
+        "Should preserve base filename",
+      );
     } finally {
       if (fs.existsSync(customFile)) {
         fs.unlinkSync(customFile);
@@ -421,13 +460,13 @@ describe("Output File Tests", () => {
 
   it("should generate valid DOCX file format", () => {
     execCLI(simpleFixture);
-    
+
     const files = fs.readdirSync(exportsDir);
     const filePath = path.join(exportsDir, files[0]);
     const buffer = fs.readFileSync(filePath);
-    
+
     // DOCX files are ZIP archives, check for ZIP signature (PK)
     assert.strictEqual(buffer[0], 0x50, "Should start with ZIP signature 'P'");
-    assert.strictEqual(buffer[1], 0x4B, "Should start with ZIP signature 'K'");
+    assert.strictEqual(buffer[1], 0x4b, "Should start with ZIP signature 'K'");
   });
 });
