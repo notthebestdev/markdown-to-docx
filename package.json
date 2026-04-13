@@ -24,7 +24,7 @@
     "html-docx-js-typescript": "^0.1.5",
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
-    "marked": "^17.0.6",
+    "marked": "^18.0.0",
     "ora": "^9.3.0",
     "prettier": "^3.8.1",
     "prompts": "^2.4.2"
