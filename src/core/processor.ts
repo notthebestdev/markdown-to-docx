@@ -73,7 +73,7 @@ export async function processBatch(
       const { outputPath, duration } = await processSingleFile(file, outputDir);
       spinner.succeed(
         `[${currentIndex}/${files.length}] ${path.basename(file)}` +
-          chalk.cyan(` (${duration}ms)`) +
+          chalk.cyan(` (${duration})`) +
           chalk.white(" → ") +
           chalk.cyan(path.basename(outputPath)),
       );
@@ -116,7 +116,7 @@ export async function processWatch(
         const { outputPath, duration } = await processSingleFile(file, outputDir);
         spinner.succeed(
           `[${index}/${initialFiles.length}] ${path.basename(file)}` +
-            chalk.cyan(` (${duration}ms)`) +
+            chalk.cyan(` (${duration})`) +
             chalk.white(" → ") +
             chalk.cyan(path.basename(outputPath)),
         );
@@ -172,7 +172,7 @@ export async function processWatch(
         const { outputPath, duration } = await processSingleFile(file, outputDir);
         spinner.succeed(
           `${path.basename(file)} converted` +
-            chalk.cyan(` (${duration}ms)`) +
+            chalk.cyan(` (${duration})`) +
             chalk.white(" → ") +
             chalk.cyan(path.basename(outputPath)),
         );

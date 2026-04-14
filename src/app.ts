@@ -113,7 +113,7 @@ import { processClipboardOrFile } from "./io/input.js";
       );
       spinner.succeed(
         "Document converted successfully in" +
-          chalk.cyan(` ${duration}ms`) +
+          chalk.cyan(` ${duration}`) +
           chalk.white(" — saved to") +
           chalk.cyan(` ${outputPath}`),
       );
