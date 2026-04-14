@@ -59,8 +59,12 @@ You can also use non-interactive CLI flags:
 md-to-docx README.md
 md-to-docx --watch docs/**/*.md
 md-to-docx --batch --pattern "docs/**/*.md"
+md-to-docx README.md --outdir exports
 md-to-docx --help
 ```
+
+By default, output is written next to the source Markdown file.
+Use `--outdir` to force all generated DOCX files into a specific folder.
 
 ### Watch mode
 

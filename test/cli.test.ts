@@ -17,7 +17,7 @@ function cleanExportsDir() {
 
 // Helper to execute CLI command
 function execCLI(filePath: string) {
-  return execSync(`node dist/app.js ${filePath}`, {
+  return execSync(`node dist/app.js ${filePath} --outdir ${exportsDir}`, {
     encoding: "utf-8",
     env: { ...process.env, FORCE_COLOR: "0" },
     stdio: ["pipe", "pipe", "pipe"],

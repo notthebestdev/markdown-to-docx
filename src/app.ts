@@ -33,14 +33,17 @@ import { processClipboardOrFile } from "./io/input.js";
       description: "Run a one-time batch conversion using --pattern",
       default: false,
     })
+    .option("outdir", {
+      alias: "o",
+      type: "string",
+      description: "Optional output directory for generated .docx files",
+    })
     .help()
     .alias("help", "h")
     .parseSync();
 
   const positionalInput = argv._[0] ? String(argv._[0]) : undefined;
-
-  const exportsDir = path.join(process.cwd(), "exports");
-  await fs.promises.mkdir(exportsDir, { recursive: true });
+  const outputDir = argv.outdir ? path.resolve(argv.outdir) : undefined;
 
   if (argv.watch) {
     let watchPattern = argv.pattern;
@@ -68,7 +71,12 @@ import { processClipboardOrFile } from "./io/input.js";
       watchPattern = response.pattern;
     }
 
-    await processWatch(watchPattern, exportsDir);
+    if (!watchPattern) {
+      console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+      process.exit(0);
+    }
+
+    await processWatch(watchPattern, outputDir);
     process.exit(0);
   }
 
@@ -81,7 +89,7 @@ import { processClipboardOrFile } from "./io/input.js";
       process.exit(1);
     }
 
-    await processBatch(argv.pattern, exportsDir);
+    await processBatch(argv.pattern, outputDir);
     process.exit(0);
   }
 
@@ -101,7 +109,7 @@ import { processClipboardOrFile } from "./io/input.js";
     try {
       const { outputPath, duration } = await processSingleFile(
         positionalInput,
-        exportsDir,
+        outputDir,
       );
       spinner.succeed(
         "Document converted successfully in" +
@@ -149,7 +157,7 @@ import { processClipboardOrFile } from "./io/input.js";
         process.exit(0);
       }
 
-      await processBatch(patternResponse.pattern, exportsDir);
+      await processBatch(patternResponse.pattern, outputDir);
     } else {
       // Single file mode
       try {
@@ -159,7 +167,13 @@ import { processClipboardOrFile } from "./io/input.js";
           ? path.basename(inputFile, path.extname(inputFile))
           : "clipboard";
         const outputBase = `${inputName}.docx`;
-        const outputPath = path.join(exportsDir, outputBase);
+        const baseOutputDir = outputDir
+          ? outputDir
+          : inputFile
+            ? path.dirname(inputFile)
+            : process.cwd();
+        await fs.promises.mkdir(baseOutputDir, { recursive: true });
+        const outputPath = path.join(baseOutputDir, outputBase);
 
         const start = Date.now();
         const spinner = ora("Converting document to .docx").start();

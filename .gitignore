@@ -146,3 +146,4 @@ Thumbs.db
 
 # Markdown To Docx generated files
 exports/
+*.docx

@@ -5,6 +5,7 @@ import chalk from "chalk";
 import { glob } from "glob";
 import chokidar from "chokidar";
 import { convertMarkdownToDocx } from "./converter.js";
+import prettyMilliseconds from "pretty-ms";
 
 function isMarkdownFile(filePath: string): boolean {
   return path.extname(filePath).toLowerCase() === ".md";
@@ -12,23 +13,26 @@ function isMarkdownFile(filePath: string): boolean {
 
 export async function processSingleFile(
   inputFile: string,
-  exportsDir: string,
-): Promise<{ outputPath: string; duration: number }> {
+  outputDir?: string,
+): Promise<{ outputPath: string; duration: string }> {
   const start = Date.now();
   const mdContent = await fs.promises.readFile(inputFile, "utf-8");
   const inputName = path.basename(inputFile, path.extname(inputFile));
   const outputBase = `${inputName}.docx`;
-  const outputPath = path.join(exportsDir, outputBase);
+  const baseOutputDir = outputDir ? outputDir : path.dirname(inputFile);
+  const outputPath = path.join(baseOutputDir, outputBase);
+
+  await fs.promises.mkdir(baseOutputDir, { recursive: true });
 
   await convertMarkdownToDocx(mdContent, outputPath);
-  const duration = Date.now() - start;
+  const duration = prettyMilliseconds(Date.now() - start, { formatSubMilliseconds: true });
 
   return { outputPath, duration };
 }
 
 export async function processBatch(
   globPattern: string,
-  exportsDir: string,
+  outputDir?: string,
 ): Promise<void> {
   const globResult = await glob(globPattern);
   const allFiles = globResult as string[];
@@ -66,7 +70,7 @@ export async function processBatch(
     ).start();
 
     try {
-      const { outputPath, duration } = await processSingleFile(file, exportsDir);
+      const { outputPath, duration } = await processSingleFile(file, outputDir);
       spinner.succeed(
         `[${currentIndex}/${files.length}] ${path.basename(file)}` +
           chalk.cyan(` (${duration}ms)`) +
@@ -93,10 +97,8 @@ export async function processBatch(
 
 export async function processWatch(
   globPattern: string,
-  exportsDir: string,
+  outputDir?: string,
 ): Promise<void> {
-  await fs.promises.mkdir(exportsDir, { recursive: true });
-
   const globResult = await glob(globPattern);
   const initialFiles = (globResult as string[]).filter(isMarkdownFile);
 
@@ -111,7 +113,7 @@ export async function processWatch(
         `[${index}/${initialFiles.length}] Converting ${path.basename(file)}`,
       ).start();
       try {
-        const { outputPath, duration } = await processSingleFile(file, exportsDir);
+        const { outputPath, duration } = await processSingleFile(file, outputDir);
         spinner.succeed(
           `[${index}/${initialFiles.length}] ${path.basename(file)}` +
             chalk.cyan(` (${duration}ms)`) +
@@ -167,7 +169,7 @@ export async function processWatch(
         `${reason === "added" ? "Added" : "Changed"}: ${path.basename(file)} — converting...`,
       ).start();
       try {
-        const { outputPath, duration } = await processSingleFile(file, exportsDir);
+        const { outputPath, duration } = await processSingleFile(file, outputDir);
         spinner.succeed(
           `${path.basename(file)} converted` +
             chalk.cyan(` (${duration}ms)`) +
