@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import ora from "ora";
 import chalk from "chalk";
-import { glob } from "glob";
+import { glob } from "tinyglobby";
 import chokidar from "chokidar";
 import { convertMarkdownToDocx } from "./converter.js";
 import prettyMilliseconds from "pretty-ms";
