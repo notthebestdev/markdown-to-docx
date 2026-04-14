@@ -9,7 +9,11 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
 import { convertMarkdownToDocx } from "./core/converter.js";
-import { processSingleFile, processBatch, processWatch } from "./core/processor.js";
+import {
+  processSingleFile,
+  processBatch,
+  processWatch,
+} from "./core/processor.js";
 import { processClipboardOrFile } from "./io/input.js";
 
 (async () => {
@@ -84,7 +88,9 @@ import { processClipboardOrFile } from "./io/input.js";
     if (!argv.pattern) {
       console.log(
         chalk.red("✖") +
-          chalk.white(" Batch mode requires --pattern (e.g., --pattern \"src/**/*.md\")."),
+          chalk.white(
+            ' Batch mode requires --pattern (e.g., --pattern "src/**/*.md").',
+          ),
       );
       process.exit(1);
     }

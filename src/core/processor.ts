@@ -25,7 +25,9 @@ export async function processSingleFile(
   await fs.promises.mkdir(baseOutputDir, { recursive: true });
 
   await convertMarkdownToDocx(mdContent, outputPath);
-  const duration = prettyMilliseconds(Date.now() - start, { formatSubMilliseconds: true });
+  const duration = prettyMilliseconds(Date.now() - start, {
+    formatSubMilliseconds: true,
+  });
 
   return { outputPath, duration };
 }
@@ -104,7 +106,9 @@ export async function processWatch(
 
   if (initialFiles.length > 0) {
     console.log(
-      chalk.green(`Found ${initialFiles.length} markdown file(s). Running initial conversion.\n`),
+      chalk.green(
+        `Found ${initialFiles.length} markdown file(s). Running initial conversion.\n`,
+      ),
     );
 
     let index = 1;
@@ -113,7 +117,10 @@ export async function processWatch(
         `[${index}/${initialFiles.length}] Converting ${path.basename(file)}`,
       ).start();
       try {
-        const { outputPath, duration } = await processSingleFile(file, outputDir);
+        const { outputPath, duration } = await processSingleFile(
+          file,
+          outputDir,
+        );
         spinner.succeed(
           `[${index}/${initialFiles.length}] ${path.basename(file)}` +
             chalk.cyan(` (${duration})`) +
@@ -131,7 +138,9 @@ export async function processWatch(
   } else {
     console.log(
       chalk.yellow("⚠") +
-        chalk.white(" No markdown files matched initially. Waiting for new files..."),
+        chalk.white(
+          " No markdown files matched initially. Waiting for new files...",
+        ),
     );
   }
 
@@ -169,7 +178,10 @@ export async function processWatch(
         `${reason === "added" ? "Added" : "Changed"}: ${path.basename(file)} — converting...`,
       ).start();
       try {
-        const { outputPath, duration } = await processSingleFile(file, outputDir);
+        const { outputPath, duration } = await processSingleFile(
+          file,
+          outputDir,
+        );
         spinner.succeed(
           `${path.basename(file)} converted` +
             chalk.cyan(` (${duration})`) +
@@ -192,7 +204,9 @@ export async function processWatch(
     if (isMarkdownFile(file)) {
       console.log(
         chalk.yellow("⚠") +
-          chalk.white(` ${path.basename(file)} was removed (no output cleanup performed).`),
+          chalk.white(
+            ` ${path.basename(file)} was removed (no output cleanup performed).`,
+          ),
       );
     }
   });
