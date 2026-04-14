@@ -37,7 +37,7 @@
     "access": "public"
   },
   "bin": {
-    "md-to-docx": "./dist/app.js"
+    "md-to-docx": "dist/app.js"
   },
   "scripts": {
     "dev": "tsx src/app.ts",
@@ -46,7 +46,7 @@
     "format": "prettier --write .",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish",
+    "release": "npm run build && changeset publish",
     "build": "tsx scripts/build.ts",
     "postbuild": "chmod +x dist/app.js",
     "prepack": "npm run build",
