@@ -5,6 +5,7 @@ buildSync({
   outfile: "dist/app.js",
   bundle: true,
   minify: true,
+  sourcemap: true,
   target: "esnext",
   platform: "node",
   format: "esm",
