@@ -40,14 +40,14 @@
     "md-to-docx": "./dist/app.js"
   },
   "scripts": {
-    "dev": "node src/app.ts",
+    "dev": "tsx src/app.ts",
     "test": "npm run build && tsx test/cli.test.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "changeset publish",
-    "build": "node scripts/build.ts",
+    "build": "tsx scripts/build.ts",
     "postbuild": "chmod +x dist/app.js",
     "prepack": "npm run build",
     "prepare": "husky"
