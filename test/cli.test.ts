@@ -112,7 +112,7 @@ describe("Basic Conversion Tests", () => {
 
     const files = fs.readdirSync(exportsDir);
     assert.strictEqual(files.length, 1);
-    assert.match(files[0], /simple-\d+\.docx/);
+    assert.strictEqual(files[0], "simple.docx");
 
     const filePath = path.join(exportsDir, files[0]);
     const stats = fs.statSync(filePath);
@@ -124,7 +124,7 @@ describe("Basic Conversion Tests", () => {
 
     const files = fs.readdirSync(exportsDir);
     assert.strictEqual(files.length, 1);
-    assert.match(files[0], /complex-\d+\.docx/);
+    assert.strictEqual(files[0], "complex.docx");
 
     const filePath = path.join(exportsDir, files[0]);
     const stats = fs.statSync(filePath);
@@ -143,19 +143,13 @@ describe("Basic Conversion Tests", () => {
     assert.ok(files.length > 0);
   });
 
-  it("should generate unique filenames for multiple conversions", () => {
+  it("should overwrite existing output when converting same file twice", () => {
     execCLI(simpleFixture);
-
-    const startTime = Date.now();
-    while (Date.now() - startTime < 5) {
-      // Wait for different timestamp
-    }
-
     execCLI(simpleFixture);
 
     const files = fs.readdirSync(exportsDir);
-    assert.strictEqual(files.length, 2);
-    assert.notStrictEqual(files[0], files[1], "Files should have unique names");
+    assert.strictEqual(files.length, 1);
+    assert.strictEqual(files[0], "simple.docx");
   });
 });
 
@@ -423,21 +417,12 @@ describe("Output File Tests", () => {
     );
   });
 
-  it("should generate files with timestamp in name", () => {
-    const beforeTime = Date.now();
+  it("should generate files using original filename", () => {
     execCLI(simpleFixture);
-    const afterTime = Date.now();
 
     const files = fs.readdirSync(exportsDir);
     const filename = files[0];
-    const timestampMatch = filename.match(/-(\d+)\.docx$/);
-
-    assert.ok(timestampMatch, "Filename should contain timestamp");
-    const timestamp = parseInt(timestampMatch[1]);
-    assert.ok(
-      timestamp >= beforeTime && timestamp <= afterTime,
-      "Timestamp should be current",
-    );
+    assert.strictEqual(filename, "simple.docx");
   });
 
   it("should preserve base filename in output", () => {
@@ -447,10 +432,7 @@ describe("Output File Tests", () => {
     try {
       execCLI(customFile);
       const files = fs.readdirSync(exportsDir);
-      assert.ok(
-        files[0].startsWith("my-custom-document-"),
-        "Should preserve base filename",
-      );
+      assert.strictEqual(files[0], "my-custom-document.docx");
     } finally {
       if (fs.existsSync(customFile)) {
         fs.unlinkSync(customFile);

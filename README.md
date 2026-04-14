@@ -53,6 +53,31 @@ When you run the program you will be prompted to provide:
 - Input file: path to the Markdown file to convert (required).
 - Or, you can provide the clipboard option to read Markdown from clipboard.
 
+You can also use non-interactive CLI flags:
+
+```sh
+md-to-docx README.md
+md-to-docx --watch docs/**/*.md
+md-to-docx --batch --pattern "docs/**/*.md"
+md-to-docx --help
+```
+
+### Watch mode
+
+You can watch one file or a glob pattern and automatically reconvert on changes:
+
+```sh
+md-to-docx --watch docs/**/*.md
+```
+
+Or watch a single file:
+
+```sh
+md-to-docx --watch README.md
+```
+
+`watch` mode runs an initial conversion, then listens for file changes until you stop it with `Ctrl+C`.
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more info.

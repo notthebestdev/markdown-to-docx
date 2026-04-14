@@ -5,25 +5,93 @@ import prompts from "prompts";
 import ora from "ora";
 import chalk from "chalk";
 import path from "path";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 import { convertMarkdownToDocx } from "./core/converter.js";
-import { processSingleFile, processBatch } from "./core/processor.js";
+import { processSingleFile, processBatch, processWatch } from "./core/processor.js";
 import { processClipboardOrFile } from "./io/input.js";
 
 (async () => {
-  // Check for CLI argument
-  const cliInputFile = process.argv[2];
+  const argv = yargs(hideBin(process.argv))
+    .scriptName("md-to-docx")
+    .usage("Usage: $0 [input.md] [options]")
+    .option("watch", {
+      alias: "w",
+      type: "boolean",
+      description: "Watch markdown files and reconvert on changes",
+      default: false,
+    })
+    .option("pattern", {
+      alias: "p",
+      type: "string",
+      description: "Glob pattern for batch or watch mode",
+    })
+    .option("batch", {
+      alias: "b",
+      type: "boolean",
+      description: "Run a one-time batch conversion using --pattern",
+      default: false,
+    })
+    .help()
+    .alias("help", "h")
+    .parseSync();
+
+  const positionalInput = argv._[0] ? String(argv._[0]) : undefined;
 
   const exportsDir = path.join(process.cwd(), "exports");
   await fs.promises.mkdir(exportsDir, { recursive: true });
 
-  if (cliInputFile) {
+  if (argv.watch) {
+    let watchPattern = argv.pattern;
+
+    if (!watchPattern && positionalInput) {
+      watchPattern = positionalInput;
+    }
+
+    if (!watchPattern) {
+      const response = await prompts({
+        type: "text",
+        name: "pattern",
+        message: "Enter watch pattern (e.g., *.md, src/**/*.md):",
+        validate: (value) => {
+          if (!value) return "You must provide a watch pattern";
+          return true;
+        },
+      });
+
+      if (!response.pattern) {
+        console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+        process.exit(0);
+      }
+
+      watchPattern = response.pattern;
+    }
+
+    await processWatch(watchPattern, exportsDir);
+    process.exit(0);
+  }
+
+  if (argv.batch) {
+    if (!argv.pattern) {
+      console.log(
+        chalk.red("✖") +
+          chalk.white(" Batch mode requires --pattern (e.g., --pattern \"src/**/*.md\")."),
+      );
+      process.exit(1);
+    }
+
+    await processBatch(argv.pattern, exportsDir);
+    process.exit(0);
+  }
+
+  if (positionalInput) {
     // CLI mode - single file
-    if (!fs.existsSync(cliInputFile)) {
+    if (!fs.existsSync(positionalInput)) {
       console.log(chalk.red("✖") + chalk.white(" File does not exist."));
       process.exit(1);
     }
-    if (!cliInputFile.toLowerCase().endsWith(".md")) {
+    if (!positionalInput.toLowerCase().endsWith(".md")) {
       console.log(chalk.red("✖") + chalk.white(" File must be a .md file."));
       process.exit(1);
     }
@@ -32,7 +100,7 @@ import { processClipboardOrFile } from "./io/input.js";
 
     try {
       const { outputPath, duration } = await processSingleFile(
-        cliInputFile,
+        positionalInput,
         exportsDir,
       );
       spinner.succeed(
@@ -90,7 +158,7 @@ import { processClipboardOrFile } from "./io/input.js";
         const inputName = inputFile
           ? path.basename(inputFile, path.extname(inputFile))
           : "clipboard";
-        const outputBase = `${inputName}-${Date.now()}.docx`;
+        const outputBase = `${inputName}.docx`;
         const outputPath = path.join(exportsDir, outputBase);
 
         const start = Date.now();

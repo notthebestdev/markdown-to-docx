@@ -3,7 +3,12 @@ import path from "path";
 import ora from "ora";
 import chalk from "chalk";
 import { glob } from "glob";
+import chokidar from "chokidar";
 import { convertMarkdownToDocx } from "./converter.js";
+
+function isMarkdownFile(filePath: string): boolean {
+  return path.extname(filePath).toLowerCase() === ".md";
+}
 
 export async function processSingleFile(
   inputFile: string,
@@ -12,7 +17,7 @@ export async function processSingleFile(
   const start = Date.now();
   const mdContent = await fs.promises.readFile(inputFile, "utf-8");
   const inputName = path.basename(inputFile, path.extname(inputFile));
-  const outputBase = `${inputName}-${Date.now()}.docx`;
+  const outputBase = `${inputName}.docx`;
   const outputPath = path.join(exportsDir, outputBase);
 
   await convertMarkdownToDocx(mdContent, outputPath);
@@ -61,10 +66,7 @@ export async function processBatch(
     ).start();
 
     try {
-      const { outputPath, duration } = await processSingleFile(
-        file,
-        exportsDir,
-      );
+      const { outputPath, duration } = await processSingleFile(file, exportsDir);
       spinner.succeed(
         `[${currentIndex}/${files.length}] ${path.basename(file)}` +
           chalk.cyan(` (${duration}ms)`) +
@@ -87,4 +89,122 @@ export async function processBatch(
   if (failureCount > 0) {
     console.log(chalk.red(`✖ ${failureCount} failed`));
   }
+}
+
+export async function processWatch(
+  globPattern: string,
+  exportsDir: string,
+): Promise<void> {
+  await fs.promises.mkdir(exportsDir, { recursive: true });
+
+  const globResult = await glob(globPattern);
+  const initialFiles = (globResult as string[]).filter(isMarkdownFile);
+
+  if (initialFiles.length > 0) {
+    console.log(
+      chalk.green(`Found ${initialFiles.length} markdown file(s). Running initial conversion.\n`),
+    );
+
+    let index = 1;
+    for (const file of initialFiles) {
+      const spinner = ora(
+        `[${index}/${initialFiles.length}] Converting ${path.basename(file)}`,
+      ).start();
+      try {
+        const { outputPath, duration } = await processSingleFile(file, exportsDir);
+        spinner.succeed(
+          `[${index}/${initialFiles.length}] ${path.basename(file)}` +
+            chalk.cyan(` (${duration}ms)`) +
+            chalk.white(" → ") +
+            chalk.cyan(path.basename(outputPath)),
+        );
+      } catch (error) {
+        spinner.fail(
+          `[${index}/${initialFiles.length}] ${path.basename(file)} ` +
+            chalk.red(`failed: ${error}`),
+        );
+      }
+      index++;
+    }
+  } else {
+    console.log(
+      chalk.yellow("⚠") +
+        chalk.white(" No markdown files matched initially. Waiting for new files..."),
+    );
+  }
+
+  console.log(
+    "\n" +
+      chalk.bold("Watch mode active") +
+      chalk.white(" - Press ") +
+      chalk.cyan("Ctrl+C") +
+      chalk.white(" to stop."),
+  );
+
+  const debounceMap = new Map<string, NodeJS.Timeout>();
+  const watcher = chokidar.watch(globPattern, {
+    ignoreInitial: true,
+    persistent: true,
+    awaitWriteFinish: {
+      stabilityThreshold: 200,
+      pollInterval: 100,
+    },
+  });
+
+  const scheduleConversion = (file: string, reason: "added" | "changed") => {
+    if (!isMarkdownFile(file)) {
+      return;
+    }
+
+    const previous = debounceMap.get(file);
+    if (previous) {
+      clearTimeout(previous);
+    }
+
+    const timeout = setTimeout(async () => {
+      debounceMap.delete(file);
+      const spinner = ora(
+        `${reason === "added" ? "Added" : "Changed"}: ${path.basename(file)} — converting...`,
+      ).start();
+      try {
+        const { outputPath, duration } = await processSingleFile(file, exportsDir);
+        spinner.succeed(
+          `${path.basename(file)} converted` +
+            chalk.cyan(` (${duration}ms)`) +
+            chalk.white(" → ") +
+            chalk.cyan(path.basename(outputPath)),
+        );
+      } catch (error) {
+        spinner.fail(
+          `${path.basename(file)} ` + chalk.red(`failed to convert: ${error}`),
+        );
+      }
+    }, 150);
+
+    debounceMap.set(file, timeout);
+  };
+
+  watcher.on("add", (file) => scheduleConversion(file, "added"));
+  watcher.on("change", (file) => scheduleConversion(file, "changed"));
+  watcher.on("unlink", (file) => {
+    if (isMarkdownFile(file)) {
+      console.log(
+        chalk.yellow("⚠") +
+          chalk.white(` ${path.basename(file)} was removed (no output cleanup performed).`),
+      );
+    }
+  });
+
+  await new Promise<void>((resolve, reject) => {
+    watcher.on("error", reject);
+
+    process.on("SIGINT", async () => {
+      for (const timeout of debounceMap.values()) {
+        clearTimeout(timeout);
+      }
+      await watcher.close();
+      console.log("\n" + chalk.gray("Watch mode stopped."));
+      resolve();
+    });
+  });
 }
