@@ -20,9 +20,13 @@
   },
   "homepage": "https://github.com/notthebestdev/markdown-to-docx#readme",
   "type": "module",
-  "main": "./dist/app.js",
+  "main": "./dist/index.js",
   "exports": {
-    ".": "./dist/app.js",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cli": "./dist/app.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -31,7 +35,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "publishConfig": {
     "access": "public"
@@ -41,13 +45,15 @@
   },
   "scripts": {
     "dev": "tsx src/app.ts",
-    "test": "npm run build && tsx test/cli.test.ts",
+    "test": "npm run build && tsx --test test/*.test.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "npm run build && changeset publish",
-    "build": "tsx scripts/build.ts",
+    "build:js": "tsx scripts/build.ts",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build": "npm run build:js && npm run build:types",
     "postbuild": "chmod +x dist/app.js",
     "prepack": "npm run build",
     "prepare": "husky"

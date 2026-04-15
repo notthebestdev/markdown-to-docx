@@ -2,10 +2,9 @@ import fs from "fs";
 import { marked } from "marked";
 import { asBlob } from "html-docx-js-typescript";
 
-export async function convertMarkdownToDocx(
+export async function convertMarkdownToDocxBuffer(
   mdContent: string,
-  outputPath: string,
-): Promise<void> {
+): Promise<Buffer> {
   let html: string | undefined;
   try {
     if (!mdContent) {
@@ -29,5 +28,13 @@ export async function convertMarkdownToDocx(
     throw new Error("Unexpected docx type. Conversion failed.");
   }
 
+  return buffer;
+}
+
+export async function convertMarkdownToDocx(
+  mdContent: string,
+  outputPath: string,
+): Promise<void> {
+  const buffer = await convertMarkdownToDocxBuffer(mdContent);
   await fs.promises.writeFile(outputPath, buffer);
 }

@@ -87,6 +87,24 @@ md-to-docx --watch README.md
 
 `watch` mode runs an initial conversion, then listens for file changes until you stop it with `Ctrl+C`.
 
+## Usage (Library)
+
+You can also import the package in Node.js projects:
+
+```ts
+import {
+    convertMarkdownFile,
+    convertMarkdownStringToFile,
+    convertMarkdownToDocxBuffer,
+} from "@thebestdev/md-to-docx";
+
+await convertMarkdownFile("docs/guide.md", "exports");
+
+await convertMarkdownStringToFile("# Hello", "exports/hello.docx");
+
+const buffer = await convertMarkdownToDocxBuffer("# Buffer output");
+```
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more info.
