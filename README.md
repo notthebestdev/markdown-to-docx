@@ -1,10 +1,15 @@
+# Markdown to DOCX
+
 <p align="center">
-    <img src="https://socialify.git.ci/notthebestdev/markdown-to-docx/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Light" alt="markdown-to-docx" />
+    <img src="https://badges.ws/maintenance/yes/2026" alt="Maintenance" />
+    <img src="https://badges.ws/badge/?value=typescript&icon=typescript" alt="Made with TypeScript" />
+    <a href="https://www.npmjs.com/package/@thebestdev/md-to-docx">
+        <img src="https://badges.ws/npm/dw/@thebestdev/md-to-docx" alt="Downloads per week" />
+    </a>
+    <a href="https://github.com/notthebestdev/markdown-to-docx/blob/main/LICENSE">
+        <img src="https://badges.ws/npm/l/apigen-ts" alt="License: MIT" />
+    </a>
 </p>
-
-This program allows you to transform Markdown into a Word document.
-
-## Description
 
 This project converts Markdown files into Microsoft Word (.docx) documents.
 
@@ -12,10 +17,10 @@ It preserves common block and inline-level elements (headings, lists, links, ima
 
 ## Features
 
-- **Fast**: Processes large Markdown files quickly and efficiently.
-- **Accurate**: Preserves formatting for headings, lists, links, images, code blocks, emphasis, and tables.
-- **CLI Tool**: Simple command-line interface for easy integration into workflows.
-- **Cross-platform**: Works on Windows, macOS, and Linux.
+- ⚡ **Fast**: Processes large Markdown files quickly and efficiently.
+- 🧩 **Accurate**: Preserves formatting for headings, lists, links, images, code blocks, emphasis, and tables.
+- 🪜 **CLI Tool**: Simple command-line interface for easy integration into workflows.
+- 🤝 **Cross-platform**: Works on Windows, macOS, and Linux.
 
 ## Installation
 
