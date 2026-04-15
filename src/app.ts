@@ -3,7 +3,7 @@
 import fs from "fs";
 import prompts from "prompts";
 import { createSpinner } from "nanospinner";
-import chalk from "chalk";
+import * as pc from "picocolors";
 import path from "path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -68,7 +68,7 @@ import { processClipboardOrFile } from "./io/input.js";
       });
 
       if (!response.pattern) {
-        console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+        console.log(pc.red("✖") + pc.white(" Operation cancelled."));
         process.exit(0);
       }
 
@@ -76,7 +76,7 @@ import { processClipboardOrFile } from "./io/input.js";
     }
 
     if (!watchPattern) {
-      console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+      console.log(pc.red("✖") + pc.white(" Operation cancelled."));
       process.exit(0);
     }
 
@@ -87,8 +87,8 @@ import { processClipboardOrFile } from "./io/input.js";
   if (argv.batch) {
     if (!argv.pattern) {
       console.log(
-        chalk.red("✖") +
-          chalk.white(
+        pc.red("✖") +
+          pc.white(
             ' Batch mode requires --pattern (e.g., --pattern "src/**/*.md").',
           ),
       );
@@ -102,11 +102,11 @@ import { processClipboardOrFile } from "./io/input.js";
   if (positionalInput) {
     // CLI mode - single file
     if (!fs.existsSync(positionalInput)) {
-      console.log(chalk.red("✖") + chalk.white(" File does not exist."));
+      console.log(pc.red("✖") + pc.white(" File does not exist."));
       process.exit(1);
     }
     if (!positionalInput.toLowerCase().endsWith(".md")) {
-      console.log(chalk.red("✖") + chalk.white(" File must be a .md file."));
+      console.log(pc.red("✖") + pc.white(" File must be a .md file."));
       process.exit(1);
     }
 
@@ -119,9 +119,9 @@ import { processClipboardOrFile } from "./io/input.js";
       );
       spinner.success(
         "Document converted successfully in" +
-          chalk.cyan(` ${duration}`) +
-          chalk.white(" — saved to") +
-          chalk.cyan(` ${outputPath}`),
+          pc.cyan(` ${duration}`) +
+          pc.white(" — saved to") +
+          pc.cyan(` ${outputPath}`),
       );
     } catch (error) {
       spinner.error("Failed to convert document");
@@ -141,7 +141,7 @@ import { processClipboardOrFile } from "./io/input.js";
     });
 
     if (!modeResponse.mode) {
-      console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+      console.log(pc.red("✖") + pc.white(" Operation cancelled."));
       process.exit(0);
     }
 
@@ -159,7 +159,7 @@ import { processClipboardOrFile } from "./io/input.js";
       ]);
 
       if (!patternResponse.pattern) {
-        console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+        console.log(pc.red("✖") + pc.white(" Operation cancelled."));
         process.exit(0);
       }
 
@@ -188,9 +188,9 @@ import { processClipboardOrFile } from "./io/input.js";
 
         spinner.success(
           "Document converted successfully in" +
-            chalk.cyan(` ${Date.now() - start}ms`) +
-            chalk.white(" — saved to") +
-            chalk.cyan(` ${outputPath}`),
+            pc.cyan(` ${Date.now() - start}ms`) +
+            pc.white(" — saved to") +
+            pc.cyan(` ${outputPath}`),
         );
       } catch (error) {
         console.error(error);

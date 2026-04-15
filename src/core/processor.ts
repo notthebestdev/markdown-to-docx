@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { createSpinner } from "nanospinner";
-import chalk from "chalk";
+import * as pc from "picocolors";
 import { glob } from "tinyglobby";
 import chokidar from "chokidar";
 import { convertMarkdownToDocx } from "./converter.js";
@@ -45,22 +45,22 @@ export async function processBatch(
 
   if (files.length === 0) {
     console.log(
-      chalk.red("✖") +
-        chalk.white(" No markdown files found matching the pattern."),
+      pc.red("✖") +
+        pc.white(" No markdown files found matching the pattern."),
     );
     process.exit(1);
   }
 
   if (skippedCount > 0) {
     console.log(
-      chalk.yellow("⚠") +
-        chalk.white(
+      pc.yellow("⚠") +
+        pc.white(
           ` Skipped ${skippedCount} non-markdown file(s) (only .md files are processed)\n`,
         ),
     );
   }
 
-  console.log(chalk.green(`Found ${files.length} file(s) to convert.\n`));
+  console.log(pc.green(`Found ${files.length} file(s) to convert.\n`));
 
   let successCount = 0;
   let failureCount = 0;
@@ -75,25 +75,25 @@ export async function processBatch(
       const { outputPath, duration } = await processSingleFile(file, outputDir);
       spinner.success(
         `[${currentIndex}/${files.length}] ${path.basename(file)}` +
-          chalk.cyan(` (${duration})`) +
-          chalk.white(" → ") +
-          chalk.cyan(path.basename(outputPath)),
+          pc.cyan(` (${duration})`) +
+          pc.white(" → ") +
+          pc.cyan(path.basename(outputPath)),
       );
       successCount++;
     } catch (error) {
       spinner.error(
         `[${currentIndex}/${files.length}] ${path.basename(file)} ` +
-          chalk.red(`failed: ${error}`),
+          pc.red(`failed: ${error}`),
       );
       failureCount++;
     }
     currentIndex++;
   }
 
-  console.log("\n" + chalk.bold("Batch conversion summary:"));
-  console.log(chalk.green(`✓ ${successCount} succeeded`));
+  console.log("\n" + pc.bold("Batch conversion summary:"));
+  console.log(pc.green(`✓ ${successCount} succeeded`));
   if (failureCount > 0) {
-    console.log(chalk.red(`✖ ${failureCount} failed`));
+    console.log(pc.red(`✖ ${failureCount} failed`));
   }
 }
 
@@ -106,7 +106,7 @@ export async function processWatch(
 
   if (initialFiles.length > 0) {
     console.log(
-      chalk.green(
+      pc.green(
         `Found ${initialFiles.length} markdown file(s). Running initial conversion.\n`,
       ),
     );
@@ -123,22 +123,22 @@ export async function processWatch(
         );
         spinner.success(
           `[${index}/${initialFiles.length}] ${path.basename(file)}` +
-            chalk.cyan(` (${duration})`) +
-            chalk.white(" → ") +
-            chalk.cyan(path.basename(outputPath)),
+            pc.cyan(` (${duration})`) +
+            pc.white(" → ") +
+            pc.cyan(path.basename(outputPath)),
         );
       } catch (error) {
         spinner.error(
           `[${index}/${initialFiles.length}] ${path.basename(file)} ` +
-            chalk.red(`failed: ${error}`),
+            pc.red(`failed: ${error}`),
         );
       }
       index++;
     }
   } else {
     console.log(
-      chalk.yellow("⚠") +
-        chalk.white(
+      pc.yellow("⚠") +
+        pc.white(
           " No markdown files matched initially. Waiting for new files...",
         ),
     );
@@ -146,10 +146,10 @@ export async function processWatch(
 
   console.log(
     "\n" +
-      chalk.bold("Watch mode active") +
-      chalk.white(" - Press ") +
-      chalk.cyan("Ctrl+C") +
-      chalk.white(" to stop."),
+      pc.bold("Watch mode active") +
+      pc.white(" - Press ") +
+      pc.cyan("Ctrl+C") +
+      pc.white(" to stop."),
   );
 
   const debounceMap = new Map<string, NodeJS.Timeout>();
@@ -184,13 +184,13 @@ export async function processWatch(
         );
         spinner.success(
           `${path.basename(file)} converted` +
-            chalk.cyan(` (${duration})`) +
-            chalk.white(" → ") +
-            chalk.cyan(path.basename(outputPath)),
+            pc.cyan(` (${duration})`) +
+            pc.white(" → ") +
+            pc.cyan(path.basename(outputPath)),
         );
       } catch (error) {
         spinner.error(
-          `${path.basename(file)} ` + chalk.red(`failed to convert: ${error}`),
+          `${path.basename(file)} ` + pc.red(`failed to convert: ${error}`),
         );
       }
     }, 150);
@@ -203,8 +203,8 @@ export async function processWatch(
   watcher.on("unlink", (file) => {
     if (isMarkdownFile(file)) {
       console.log(
-        chalk.yellow("⚠") +
-          chalk.white(
+        pc.yellow("⚠") +
+          pc.white(
             ` ${path.basename(file)} was removed (no output cleanup performed).`,
           ),
       );
@@ -219,7 +219,7 @@ export async function processWatch(
         clearTimeout(timeout);
       }
       await watcher.close();
-      console.log("\n" + chalk.gray("Watch mode stopped."));
+      console.log("\n" + pc.gray("Watch mode stopped."));
       resolve();
     });
   });

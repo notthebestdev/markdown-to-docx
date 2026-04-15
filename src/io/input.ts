@@ -1,6 +1,6 @@
 import fs from "fs";
 import prompts from "prompts";
-import chalk from "chalk";
+import * as pc from "picocolors";
 import clipboardy from "clipboardy";
 
 export async function processClipboardOrFile(): Promise<{
@@ -19,7 +19,7 @@ export async function processClipboardOrFile(): Promise<{
   });
 
   if (!sourceResponse.source) {
-    console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+    console.log(pc.red("✖") + pc.white(" Operation cancelled."));
     process.exit(0);
   }
 
@@ -27,13 +27,13 @@ export async function processClipboardOrFile(): Promise<{
     try {
       const mdContent = await clipboardy.read();
       if (!mdContent) {
-        console.log(chalk.red("✖") + chalk.white(" Clipboard is empty."));
+        console.log(pc.red("✖") + pc.white(" Clipboard is empty."));
         process.exit(1);
       }
       return { mdContent };
     } catch (err) {
       console.log(
-        chalk.red("✖") + chalk.white(" Failed to read from clipboard."),
+        pc.red("✖") + pc.white(" Failed to read from clipboard."),
       );
       console.error(err);
       process.exit(1);
@@ -56,7 +56,7 @@ export async function processClipboardOrFile(): Promise<{
     ]);
     // Check if user cancelled the prompts
     if (!response.inputFile) {
-      console.log(chalk.red("✖") + chalk.white(" Operation cancelled."));
+      console.log(pc.red("✖") + pc.white(" Operation cancelled."));
       process.exit(0);
     }
     const mdContent = await fs.promises.readFile(response.inputFile, "utf-8");
