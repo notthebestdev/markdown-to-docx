@@ -64,7 +64,7 @@
     "clipboardy": "^5.3.1",
     "html-docx-js-typescript": "^0.1.5",
     "marked": "^18.0.0",
-    "ora": "^9.3.0",
+    "nanospinner": "^1.2.2",
     "pretty-ms": "^9.3.0",
     "prompts": "^2.4.2",
     "tinyglobby": "^0.2.16",

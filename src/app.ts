@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import prompts from "prompts";
-import ora from "ora";
+import { createSpinner } from "nanospinner";
 import chalk from "chalk";
 import path from "path";
 import yargs from "yargs";
@@ -110,21 +110,21 @@ import { processClipboardOrFile } from "./io/input.js";
       process.exit(1);
     }
 
-    const spinner = ora("Converting document to .docx").start();
+    const spinner = createSpinner("Converting document to .docx").start();
 
     try {
       const { outputPath, duration } = await processSingleFile(
         positionalInput,
         outputDir,
       );
-      spinner.succeed(
+      spinner.success(
         "Document converted successfully in" +
           chalk.cyan(` ${duration}`) +
           chalk.white(" — saved to") +
           chalk.cyan(` ${outputPath}`),
       );
     } catch (error) {
-      spinner.fail("Failed to convert document");
+      spinner.error("Failed to convert document");
       console.error(error);
       process.exit(1);
     }
@@ -182,11 +182,11 @@ import { processClipboardOrFile } from "./io/input.js";
         const outputPath = path.join(baseOutputDir, outputBase);
 
         const start = Date.now();
-        const spinner = ora("Converting document to .docx").start();
+        const spinner = createSpinner("Converting document to .docx").start();
 
         await convertMarkdownToDocx(mdContent, outputPath);
 
-        spinner.succeed(
+        spinner.success(
           "Document converted successfully in" +
             chalk.cyan(` ${Date.now() - start}ms`) +
             chalk.white(" — saved to") +

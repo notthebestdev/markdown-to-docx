@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import ora from "ora";
+import { createSpinner } from "nanospinner";
 import chalk from "chalk";
 import { glob } from "tinyglobby";
 import chokidar from "chokidar";
@@ -67,13 +67,13 @@ export async function processBatch(
   let currentIndex = 1;
 
   for (const file of files) {
-    const spinner = ora(
+    const spinner = createSpinner(
       `[${currentIndex}/${files.length}] Converting ${path.basename(file)}`,
     ).start();
 
     try {
       const { outputPath, duration } = await processSingleFile(file, outputDir);
-      spinner.succeed(
+      spinner.success(
         `[${currentIndex}/${files.length}] ${path.basename(file)}` +
           chalk.cyan(` (${duration})`) +
           chalk.white(" → ") +
@@ -81,7 +81,7 @@ export async function processBatch(
       );
       successCount++;
     } catch (error) {
-      spinner.fail(
+      spinner.error(
         `[${currentIndex}/${files.length}] ${path.basename(file)} ` +
           chalk.red(`failed: ${error}`),
       );
@@ -113,7 +113,7 @@ export async function processWatch(
 
     let index = 1;
     for (const file of initialFiles) {
-      const spinner = ora(
+      const spinner = createSpinner(
         `[${index}/${initialFiles.length}] Converting ${path.basename(file)}`,
       ).start();
       try {
@@ -121,14 +121,14 @@ export async function processWatch(
           file,
           outputDir,
         );
-        spinner.succeed(
+        spinner.success(
           `[${index}/${initialFiles.length}] ${path.basename(file)}` +
             chalk.cyan(` (${duration})`) +
             chalk.white(" → ") +
             chalk.cyan(path.basename(outputPath)),
         );
       } catch (error) {
-        spinner.fail(
+        spinner.error(
           `[${index}/${initialFiles.length}] ${path.basename(file)} ` +
             chalk.red(`failed: ${error}`),
         );
@@ -174,7 +174,7 @@ export async function processWatch(
 
     const timeout = setTimeout(async () => {
       debounceMap.delete(file);
-      const spinner = ora(
+      const spinner = createSpinner(
         `${reason === "added" ? "Added" : "Changed"}: ${path.basename(file)} — converting...`,
       ).start();
       try {
@@ -182,14 +182,14 @@ export async function processWatch(
           file,
           outputDir,
         );
-        spinner.succeed(
+        spinner.success(
           `${path.basename(file)} converted` +
             chalk.cyan(` (${duration})`) +
             chalk.white(" → ") +
             chalk.cyan(path.basename(outputPath)),
         );
       } catch (error) {
-        spinner.fail(
+        spinner.error(
           `${path.basename(file)} ` + chalk.red(`failed to convert: ${error}`),
         );
       }

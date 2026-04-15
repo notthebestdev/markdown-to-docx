@@ -93,9 +93,9 @@ You can also import the package in Node.js projects:
 
 ```ts
 import {
-    convertMarkdownFile,
-    convertMarkdownStringToFile,
-    convertMarkdownToDocxBuffer,
+  convertMarkdownFile,
+  convertMarkdownStringToFile,
+  convertMarkdownToDocxBuffer,
 } from "@thebestdev/md-to-docx";
 
 await convertMarkdownFile("docs/guide.md", "exports");
