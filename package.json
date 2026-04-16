@@ -1,6 +1,6 @@
 {
   "name": "@thebestdev/md-to-docx",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Transform Markdown into a Word document.",
   "keywords": [
     "markdown",
