@@ -59,7 +59,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
+    "chokidar": "^5.0.0",
     "clipboardy": "^5.3.1",
     "html-docx-js-typescript": "^0.1.5",
     "marked": "^18.0.0",
