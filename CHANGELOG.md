@@ -1,5 +1,19 @@
 # @thebestdev/md-to-docx
 
+## 1.2.0
+
+### Minor Changes
+
+- [`eb2e111`](https://github.com/notthebestdev/markdown-to-docx/commit/eb2e111a4771328010b7b2d03c75d81b4d29b62e) Thanks [@notthebestdev](https://github.com/notthebestdev)! - ✨ feat(core): add support for Node.js library usage
+
+### Patch Changes
+
+- [`aaa4045`](https://github.com/notthebestdev/markdown-to-docx/commit/aaa4045907c59a0966fe68f2bf0be204dd93372a) Thanks [@notthebestdev](https://github.com/notthebestdev)! - ♻️ refactor(dependencies): replace chalk with picocolors
+
+- [`a1ff92f`](https://github.com/notthebestdev/markdown-to-docx/commit/a1ff92f4fdf9705b2b7710886df6d04c786a1f68) Thanks [@notthebestdev](https://github.com/notthebestdev)! - 📝 docs(readme): update badges and feature list formatting
+
+- [`f4c82ec`](https://github.com/notthebestdev/markdown-to-docx/commit/f4c82eca415518a6a934587694ac9956ebcb40aa) Thanks [@notthebestdev](https://github.com/notthebestdev)! - ♻️ refactor(app): replace ora with nanospinner
+
 ## 1.1.0
 
 ### Minor Changes
