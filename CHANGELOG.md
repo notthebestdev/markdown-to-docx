@@ -1,5 +1,13 @@
 # @thebestdev/md-to-docx
 
+## 1.2.1
+
+### Patch Changes
+
+- [`e343dd3`](https://github.com/notthebestdev/markdown-to-docx/commit/e343dd34c6be6a345c00c4a69ce78b8fc8bfbca9) Thanks [@notthebestdev](https://github.com/notthebestdev)! - 🔥 chore: remove cache from release workflow
+
+- [`9228f32`](https://github.com/notthebestdev/markdown-to-docx/commit/9228f323fd272d37041fb838c1a46f799a950bf0) Thanks [@notthebestdev](https://github.com/notthebestdev)! - ➖ refactor(io): replace clipboardy with tinyclip
+
 ## 1.2.0
 
 ### Minor Changes
