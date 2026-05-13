@@ -1,7 +1,7 @@
 import fs from "fs";
 import prompts from "prompts";
 import * as pc from "picocolors";
-import clipboardy from "clipboardy";
+import * as clipboard from 'tinyclip'
 
 export async function processClipboardOrFile(): Promise<{
   inputFile?: string;
@@ -25,7 +25,7 @@ export async function processClipboardOrFile(): Promise<{
 
   if (sourceResponse.source === "clipboard") {
     try {
-      const mdContent = await clipboardy.read();
+      const mdContent = await clipboard.readText();
       if (!mdContent) {
         console.log(pc.red("✖") + pc.white(" Clipboard is empty."));
         process.exit(1);

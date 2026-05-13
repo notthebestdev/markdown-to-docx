@@ -60,13 +60,13 @@
   },
   "dependencies": {
     "chokidar": "^5.0.0",
-    "clipboardy": "^5.3.1",
     "html-docx-js-typescript": "^0.1.5",
     "marked": "^18.0.0",
     "nanospinner": "^1.2.2",
     "picocolors": "^1.1.1",
     "pretty-ms": "^9.3.0",
     "prompts": "^2.4.2",
+    "tinyclip": "^0.1.12",
     "tinyglobby": "^0.2.16",
     "yargs": "^18.0.0"
   },
