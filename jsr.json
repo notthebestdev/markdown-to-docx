@@ -1,0 +1,6 @@
+{
+  "name": "@thebestdev/md-to-docx",
+  "version": "1.2.1",
+  "license": "MIT",
+  "exports": "./dist/index.js"
+}
