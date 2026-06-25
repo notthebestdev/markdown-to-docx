@@ -75,7 +75,7 @@
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.30.0",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^25.6.0",
+    "@types/node": "^26.0.1",
     "@types/prompts": "^2.4.9",
     "@types/yargs": "^17.0.35",
     "esbuild": "^0.28.0",
