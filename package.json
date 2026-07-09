@@ -85,7 +85,7 @@
     "jiti": "^2.6.1",
     "prettier": "^3.8.2",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.58.2"
   }
 }
