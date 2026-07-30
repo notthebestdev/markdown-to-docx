@@ -67,7 +67,7 @@
     "picocolors": "^1.1.1",
     "pretty-ms": "^9.3.0",
     "prompts": "^2.4.2",
-    "tinyclip": "^0.1.12",
+    "tinyclip": "^1.0.1",
     "tinyglobby": "^0.2.16",
     "yargs": "^18.0.0"
   },
