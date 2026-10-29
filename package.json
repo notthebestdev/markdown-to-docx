@@ -60,7 +60,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "chokidar": "^5.0.0",
+    "chokidar": "^6.0.0",
     "html-docx-js-typescript": "^0.1.5",
     "marked": "^18.0.0",
     "nanospinner": "^1.2.2",
